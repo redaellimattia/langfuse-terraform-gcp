@@ -137,8 +137,20 @@ variable "auth_azure_ad_client_id" {
   default     = ""
 }
 
+variable "ssl_certificate_body" {
+  description = "Content of the SSL certificate (public key)"
+  type        = string
+  default     = ""
+}
+
 variable "auth_azure_ad_client_secret" {
   description = "Client Secret for Azure AD SSO"
+  type        = string
+  default     = ""
+}
+
+variable "ssl_certificate_private_key" {
+  description = "Content of the SSL certificate private key"
   type        = string
   sensitive   = true
   default     = ""
