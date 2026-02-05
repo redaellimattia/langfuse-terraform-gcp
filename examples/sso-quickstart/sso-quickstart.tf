@@ -4,14 +4,21 @@ module "langfuse" {
   domain = "langfuse.example.com"
 
   # Optional use a different name for your installation
-  # e.g. when using the module multiple times on the same GCP account
-  name = "langfuse"
+  name = "langfuse-sso"
 
   # Optional: Configure the Subnetwork
   subnetwork_cidr = "10.0.0.0/16"
 
   # Optional: Configure the Kubernetes cluster
   kubernetes_namespace = "langfuse"
+
+  # Configure Azure AD SSO
+  auth_azure_ad = {
+    client_id           = "your-client-id"
+    client_secret       = "your-client-secret"
+    tenant_id           = "your-tenant-id"
+    enforcement_domains = "your-domain.com" # Optional: restrict to specific domains
+  }
 
   # Optional: Configure the database instances
   database_instance_tier              = "db-perf-optimized-N-2"

@@ -1,19 +1,23 @@
 locals {
-  sso_azure_ad_env = var.auth_azure_ad_enabled ? [
+  sso_azure_ad_env = var.auth_azure_ad.client_id != "" ? [
     {
-      name  = "AUTH_AZURE_AD_CLIENT_ID"
-      value = var.auth_azure_ad_client_id
+      name      = "AUTH_AZURE_AD_CLIENT_ID"
+      value     = var.auth_azure_ad.client_id
+      valueFrom = null
     },
     {
-      name  = "AUTH_AZURE_AD_TENANT_ID"
-      value = var.auth_azure_ad_tenant_id
+      name      = "AUTH_AZURE_AD_TENANT_ID"
+      value     = var.auth_azure_ad.tenant_id
+      valueFrom = null
     },
     {
-      name  = "AUTH_DOMAINS_WITH_SSO_ENFORCEMENT"
-      value = var.auth_sso_enforcement_domains
+      name      = "AUTH_DOMAINS_WITH_SSO_ENFORCEMENT"
+      value     = var.auth_azure_ad.enforcement_domains
+      valueFrom = null
     },
     {
-      name = "AUTH_AZURE_AD_CLIENT_SECRET"
+      name  = "AUTH_AZURE_AD_CLIENT_SECRET"
+      value = null
       valueFrom = {
         secretKeyRef = {
           name = kubernetes_secret.langfuse_sso_azure_ad[0].metadata[0].name

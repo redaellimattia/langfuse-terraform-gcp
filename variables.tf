@@ -124,27 +124,9 @@ variable "ssl_certificate_name" {
   default     = ""
 }
 
-# SSO Configuration (Azure AD / Entra ID)
-variable "auth_azure_ad_enabled" {
-  description = "Enable Azure AD (Entra ID) Single Sign-On"
-  type        = bool
-  default     = false
-}
-
-variable "auth_azure_ad_client_id" {
-  description = "Client ID for Azure AD SSO"
-  type        = string
-  default     = ""
-}
 
 variable "ssl_certificate_body" {
   description = "Content of the SSL certificate (public key)"
-  type        = string
-  default     = ""
-}
-
-variable "auth_azure_ad_client_secret" {
-  description = "Client Secret for Azure AD SSO"
   type        = string
   default     = ""
 }
@@ -156,14 +138,20 @@ variable "ssl_certificate_private_key" {
   default     = ""
 }
 
-variable "auth_azure_ad_tenant_id" {
-  description = "Tenant ID for Azure AD SSO"
-  type        = string
-  default     = ""
-}
-
-variable "auth_sso_enforcement_domains" {
-  description = "Comma-separated list of domains to enforce SSO for (e.g. amplifon.com)"
-  type        = string
-  default     = ""
+# SSO Configuration (Azure AD / Entra ID)
+variable "auth_azure_ad" {
+  description = "Configuration for Azure AD (Entra ID) Single Sign-On"
+  type = object({
+    client_id           = string
+    client_secret       = string
+    tenant_id           = string
+    enforcement_domains = string
+  })
+  default = {
+    client_id           = ""
+    client_secret       = ""
+    tenant_id           = ""
+    enforcement_domains = ""
+  }
+  sensitive = true
 }
