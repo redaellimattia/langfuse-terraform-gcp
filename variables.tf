@@ -137,6 +137,11 @@ variable "ssl_certificate_private_key" {
   sensitive   = true
   default     = ""
 }
+variable "provision_static_ip" {
+  description = "Whether to provision a static global IP for the Ingress. Set to true if you need a stable IP for DNS configuration before deployment."
+  type        = bool
+  default     = false
+}
 
 # SSO Configuration (Azure AD / Entra ID)
 variable "auth_azure_ad" {
