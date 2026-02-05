@@ -1,4 +1,28 @@
 locals {
+  sso_azure_ad_env = var.auth_azure_ad_enabled ? [
+    {
+      name  = "AUTH_AZURE_AD_CLIENT_ID"
+      value = var.auth_azure_ad_client_id
+    },
+    {
+      name  = "AUTH_AZURE_AD_TENANT_ID"
+      value = var.auth_azure_ad_tenant_id
+    },
+    {
+      name  = "AUTH_DOMAINS_WITH_SSO_ENFORCEMENT"
+      value = var.auth_sso_enforcement_domains
+    },
+    {
+      name = "AUTH_AZURE_AD_CLIENT_SECRET"
+      valueFrom = {
+        secretKeyRef = {
+          name = kubernetes_secret.langfuse_sso_azure_ad[0].metadata[0].name
+          key  = "AUTH_AZURE_AD_CLIENT_SECRET"
+        }
+      }
+    }
+  ] : []
+
   langfuse_values   = <<EOT
 langfuse:
   salt:
@@ -17,7 +41,7 @@ langfuse:
   additionalEnv:
     - name: LANGFUSE_USE_GOOGLE_CLOUD_STORAGE
       value: "true"
-%{for env in var.additional_env~}
+%{for env in concat(var.additional_env, local.sso_azure_ad_env)~}
     - name: ${env.name}
 %{if env.value != null~}
       value: ${jsonencode(env.value)}

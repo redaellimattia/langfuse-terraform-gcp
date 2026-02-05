@@ -226,6 +226,11 @@ module "langfuse" {
 | additional_env                      | Additional environment variables to add to the Langfuse container. Supports both direct values and Kubernetes valueFrom references (secrets, configMaps). See examples/additional-env for usage examples. | list(object) | []                      |    no    |
 | create_dns_zone                     | Whether to create a Google Cloud DNS managed zone. Set to `false` if you manage DNS externally.                                                                                                           | bool         | true                    |    no    |
 | ssl_certificate_name                | Name of an existing SSL certificate (e.g. created via `google_compute_ssl_certificate`). If provided, managed certificate creation is skipped.                                                            | string       | ""                      |    no    |
+| auth_azure_ad_enabled               | Enable Azure AD Single Sign-On                                                                                                                                                                            | bool         | false                   |    no    |
+| auth_azure_ad_client_id             | Client ID for Azure AD SSO                                                                                                                                                                                | string       | ""                      |    no    |
+| auth_azure_ad_client_secret         | Client Secret for Azure AD SSO                                                                                                                                                                            | string       | ""                      |    no    |
+| auth_azure_ad_tenant_id             | Tenant ID for Azure AD SSO                                                                                                                                                                                | string       | ""                      |    no    |
+| auth_sso_enforcement_domains        | Comma-separated list of domains to enforce SSO for (e.g. "amplifon.com")                                                                                                                                  | string       | ""                      |    no    |
 
 ## Custom SSL & External DNS
 
@@ -253,6 +258,29 @@ module "langfuse" {
 
   create_dns_zone      = false
   ssl_certificate_name = google_compute_ssl_certificate.my_cert.name
+}
+```
+
+## SSO Configuration (Azure AD / Entra ID)
+
+This module has built-in support for Azure AD (Entra ID) SSO. When enabled, it automatically injects the necessary environment variables and secrets into the Langfuse container.
+
+To use other providers (Auth0, Google, etc.), use the generic `additional_env` input.
+
+### Usage
+
+```hcl
+module "langfuse" {
+  source = "github.com/langfuse/langfuse-terraform-gcp"
+
+  # ... other config ...
+
+  # Enable Azure AD SSO
+  auth_azure_ad_enabled          = true
+  auth_azure_ad_client_id        = "your-client-id"
+  auth_azure_ad_client_secret    = "your-client-secret"
+  auth_azure_ad_tenant_id        = "your-tenant-id"
+  auth_sso_enforcement_domains   = "amplifon.com"
 }
 ```
 
